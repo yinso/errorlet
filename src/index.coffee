@@ -16,5 +16,9 @@ class AppError extends Error
       @name = params.error
     else
       @name = 'AppError'
+  inspect: () ->
+    @toString()
+  toString: () ->
+    "[#{@name}: #{JSON.stringify(@)}]"
 
 module.exports = AppError
