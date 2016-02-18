@@ -7,9 +7,6 @@ JSONDIR=.
 COFFEE_SOURCES= $(wildcard $(VPATH)/*.coffee)
 COFFEE_OBJECTS=$(patsubst $(VPATH)/%.coffee, $(BUILDDIR)/%.js, $(COFFEE_SOURCES))
 
-BEAN_FILES=$(wildcard $(BEANDIR)/*.yml)
-JSON_FILES=$(patsubst $(BEANDIR)/%.yml, $(JSONDIR)/%.json, $(BEAN_FILES))
-
 GRAMMAR_DIR=src
 GRAMMAR_BUILD_DIR=lib
 
@@ -23,14 +20,7 @@ all: build
 build: node_modules objects
 
 .PHONY: objects
-objects: $(COFFEE_OBJECTS) $(JSON_FILES) $(GRAMMAR_OBJECTS) $(GRAMMAR_TEMP_OBJECTS)
-
-$(JSONDIR)/%.json: $(BEANDIR)/%.yml
-	./node_modules/.bin/bean --source $<
-
-.PHONY: test
-test: build
-	./node_modules/.bin/testlet
+objects: $(COFFEE_OBJECTS) $(GRAMMAR_OBJECTS) $(GRAMMAR_TEMP_OBJECTS)
 
 .PHONY: clean
 clean:

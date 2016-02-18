@@ -2,6 +2,7 @@
   "author": "YC <yinso.chen@gmail.com>",
   "name": "errorlet",
   "description": "a simple custom error library",
+  "license": "BSD-3-Clause",
   "version": "0.1.1",
   "repository": {
     "type": "git",
@@ -12,13 +13,14 @@
     "node": ">= 0.8.4"
   },
   "scripts": {
-    "test": "make test",
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --recursive",
     "prepublish": "make"
   },
-  "dependencies": null,
+  "dependencies": {},
   "devDependencies": {
-    "coffee-script": "=1.8.0",
-    "testlet": ">= 0.2.0",
-    "coffee-bean": ">=0.3.0"
+    "chai": "^3.5.0",
+    "coffee-script": "^1.10.0",
+    "mocha": "^2.4.5"
   }
 }
+
