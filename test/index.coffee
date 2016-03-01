@@ -1,5 +1,6 @@
 AppError = require '../src/index'
 { assert } = require 'chai'
+Promise = require 'bluebird'
 
 describe 'app error test', ->
 
@@ -33,4 +34,57 @@ describe 'app error test', ->
       assert.notOk stack[1].match /at foo/
       assert.notOk stack[1].match /at bar/
       assert.ok stack[1].match /at Context/
+
+  it 'can handle error in async fashion', (done) ->
+    AppError.raiseAsync { error: 'test', message: 'this is async test' }, (err) ->
+      if err
+        console.log err.stack
+        done null
+      else
+        AppError.async { error: 'no_async_error', message: 'no async error' }, done
+
+  it 'can deal with callback chain', (done) ->
+    foo = (cb) ->
+      setImmediate ->
+        bar cb
+    bar = (cb) ->
+      setImmediate ->
+        baz cb
+
+    baz = (cb) ->
+      setImmediate ->
+        AppError.raiseAsync { error: 'test' }, cb
+
+    foo (err) ->
+      if err
+        console.log err.stack
+        done null
+      else
+        done null
+
+  it 'can deal with promise', (done) ->
+    foo = (cb) ->
+        #setImmediate ->
+        console.log "foo called"
+        cb null
+    bar = (cb) ->
+        #setImmediate ->
+        console.log "bar called"
+        cb null
+    baz = (cb) ->
+        #setImmediate ->
+        console.log "baz called"
+        AppError.raiseAsync { error: 'test' }, cb
+
+    fooAsync = Promise.promisify foo
+    barAsync = Promise.promisify bar
+    bazAsync = Promise.promisify baz
+    fooAsync()
+      .then ->
+        barAsync()
+      .then ->
+        bazAsync()
+      .catch (err) ->
+        console.log err.stack
+        done null
 

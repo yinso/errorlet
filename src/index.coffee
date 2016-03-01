@@ -1,6 +1,9 @@
 class AppError extends Error
   @isa: (obj) ->
     obj instanceof @
+  @raiseAsync: (params = {}, cb) ->
+    err = @create params, @async
+    return cb(err);
   @raise: (params = {}, context = AppError.raise) ->
     err = @create params, context
     throw err
@@ -18,6 +21,7 @@ class AppError extends Error
     if params.hasOwnProperty('message')
       @_message = params.message
     @message = @format()
+    @traces = []
   inspect: () ->
     @toString()
   format: () ->
